@@ -12,6 +12,7 @@ public class Apple {
         this.position = position;
         this.gameBoard = gameBoard;
         this.snake = snake;
+        this.respawn();
     }
 
     public void respawn() {

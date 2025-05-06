@@ -1,8 +1,10 @@
 package jv.model;
 
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.event.KeyListener;
+import java.io.IOException;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -17,11 +19,13 @@ public class Game extends JPanel implements KeyListener {
     private Snake snake;
     private Apple apple;
     private Timer gameTimer;
+    private int score = 0;
+    private boolean gameOver = false;
 
     public Game() {
         this.gameBoard = new GameBoard(400, 400);
         this.snake = new Snake("RIGHT", new ArrayList<>());
-        this.apple = new Apple(new Point(8, 10), gameBoard, snake);
+        this.apple = new Apple(new Point(0, 0), gameBoard, snake);
 
         gameTimer = new Timer(GAME_SPEED, e -> moveSnake());
         gameTimer.start();
@@ -36,6 +40,7 @@ public class Game extends JPanel implements KeyListener {
         if (head.equals(apple.getPosition())) {
             snake.setHasEaten(true);
             apple.respawn();
+            score += 10;
         }
 
         snake.move();
@@ -44,6 +49,8 @@ public class Game extends JPanel implements KeyListener {
         if (snake.checkSelfCollision()) {
             System.out.println("Tu t'es mangé toi-même !");
             gameTimer.stop();
+            gameOver = true;
+            repaint();
             return;
         }
 
@@ -60,13 +67,28 @@ public class Game extends JPanel implements KeyListener {
             System.out.println("Position de la tête : (" + head.x + ", " + head.y + ")");
             System.out.println("Tu as perdu.");
             gameTimer.stop();
+            gameOver = true;
+            repaint();
         }
+    }
+
+    public void restart() {
+        this.snake = new Snake("RIGHT", new ArrayList<>());
+        this.apple = new Apple(new Point(8, 10), gameBoard, snake);
+        this.gameOver = false;
+        this.score = 0;
+        gameTimer.restart();
+        repaint();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        gameBoard.draw(g, snake, apple);
+        try {
+            gameBoard.draw(g, snake, apple, score, gameOver);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -85,6 +107,10 @@ public class Game extends JPanel implements KeyListener {
                 snake.setDirection("RIGHT");
                 break;
         }
+
+        if (gameOver && e.getKeyCode() == KeyEvent.VK_R) {
+            restart();
+        }
     }
 
     @Override
@@ -93,5 +119,9 @@ public class Game extends JPanel implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
