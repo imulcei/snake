@@ -18,6 +18,9 @@ public class Snake {
         setBody(body);
     }
 
+    /**
+     * Gère les mouvements du serpent
+     */
     public void move() {
         Point head = body.get(0);
         switch (direction) {
@@ -43,10 +46,11 @@ public class Snake {
         }
     }
 
-    public void grow() {
-
-    }
-
+    /**
+     * Vérifie s'il y a collision entre le tête du serpent et son corps
+     * 
+     * @return Retourne vrai si la tête touche le corps, faux si non
+     */
     public boolean checkSelfCollision() {
         Point head = body.get(0);
         for (int i = 1; i < body.size(); i++) {
@@ -57,6 +61,7 @@ public class Snake {
         return false;
     }
 
+    // getters et setters
     public String getDirection() {
         return direction;
     }

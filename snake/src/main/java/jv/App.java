@@ -10,7 +10,10 @@ public class App {
 
         // création de la fenêtre
         frame.add(game);
-        frame.setSize(400, 430);
+        // dimensionne la fenêtre
+        frame.setSize(400, 428);
+        // empêche l'agrandissement de la fenêtre
+        frame.setResizable(false);
 
         // comportement à la fermeture
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

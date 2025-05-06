@@ -21,19 +21,26 @@ public class Game extends JPanel implements KeyListener {
     private Timer gameTimer;
     private int score = 0;
     private boolean gameOver = false;
+    private int currentSpeed = GAME_SPEED;
 
+    /**
+     * Création d'une nouvelle partie
+     */
     public Game() {
         this.gameBoard = new GameBoard(400, 400);
         this.snake = new Snake("RIGHT", new ArrayList<>());
         this.apple = new Apple(new Point(0, 0), gameBoard, snake);
 
-        gameTimer = new Timer(GAME_SPEED, e -> moveSnake());
+        gameTimer = new Timer(currentSpeed, e -> moveSnake());
         gameTimer.start();
 
         addKeyListener(this);
         setFocusable(true);
     }
 
+    /**
+     * Gère les mouvements du serpent
+     */
     private void moveSnake() {
         // vérifie si la tête touche la pomme avant de bouger
         Point head = snake.getBody().get(0);
@@ -41,6 +48,12 @@ public class Game extends JPanel implements KeyListener {
             snake.setHasEaten(true);
             apple.respawn();
             score += 10;
+
+            // augmenter la vitesse
+            if (currentSpeed > 100) {
+                currentSpeed -= 5;
+                gameTimer.setDelay(currentSpeed);
+            }
         }
 
         snake.move();
@@ -54,17 +67,20 @@ public class Game extends JPanel implements KeyListener {
             return;
         }
 
+        // vérifie les collisions avec les murs
         checkCollision();
         repaint();
     }
 
+    /**
+     * Gère les collisions avec les murs
+     */
     public void checkCollision() {
         // collision avec les murs
         Point head = snake.getBody().get(0);
         int collisionX = gameBoard.getWidth() / TILE_SIZE;
         int collisionY = gameBoard.getHeight() / TILE_SIZE;
         if (head.x >= collisionX || head.x < 0 || head.y >= collisionY || head.y < 0) {
-            System.out.println("Position de la tête : (" + head.x + ", " + head.y + ")");
             System.out.println("Tu as perdu.");
             gameTimer.stop();
             gameOver = true;
@@ -72,11 +88,16 @@ public class Game extends JPanel implements KeyListener {
         }
     }
 
+    /**
+     * Gère le lancement d'une nouvelle partie après une partie perdue
+     */
     public void restart() {
         this.snake = new Snake("RIGHT", new ArrayList<>());
         this.apple = new Apple(new Point(8, 10), gameBoard, snake);
         this.gameOver = false;
         this.score = 0;
+        this.currentSpeed = GAME_SPEED;
+        gameTimer.setDelay(currentSpeed);
         gameTimer.restart();
         repaint();
     }
@@ -121,6 +142,7 @@ public class Game extends JPanel implements KeyListener {
     public void keyReleased(KeyEvent e) {
     }
 
+    // setters
     public void setScore(int score) {
         this.score = score;
     }

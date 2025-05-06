@@ -30,15 +30,16 @@ public class GameBoard {
 
         // dessin du serpent
         g.setColor(Color.DARK_GRAY);
-        if (snake.getBody().isEmpty()) {
-            System.out.println("Le serpent est vide !");
-        }
-        for (Point p : snake.getBody()) {
-            g.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        for (int i = 0; i < snake.getBody().size(); i++) {
+            Point p = snake.getBody().get(i);
+            if (i == 0) {
+                g.fillRoundRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE, 8, 8);
+            } else {
+                g.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            }
         }
 
         // dessin de la pomme
-        // Point applePosition = apple.getPosition();
         g.setColor(Color.DARK_GRAY);
         g.setFont(new Font("SansSerif", Font.PLAIN, 26));
         g.drawString("✸", apple.getPosition().x * TILE_SIZE, (apple.getPosition().y + 1) * TILE_SIZE);
