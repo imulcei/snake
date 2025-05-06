@@ -10,6 +10,7 @@ public class Snake {
     private boolean hasEaten = false;
 
     public Snake(String direction, List<Point> body) {
+        this.direction = direction;
         setDirection(direction);
         if (body == null || body.isEmpty()) {
             body = new ArrayList<>();
@@ -67,6 +68,13 @@ public class Snake {
     }
 
     public void setDirection(String direction) {
+        // gère le fait qu'il ne puisse pas aller à contre-sens
+        if ((this.direction.equals("UP") && direction.equals("DOWN")) ||
+                (this.direction.equals("DOWN") && direction.equals("UP")) ||
+                (this.direction.equals("LEFT") && direction.equals("RIGHT")) ||
+                (this.direction.equals("RIGHT") && direction.equals("LEFT"))) {
+            return;
+        }
         this.direction = direction;
     }
 
