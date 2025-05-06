@@ -7,6 +7,7 @@ import java.util.List;
 public class Snake {
     private String direction;
     private List<Point> body;
+    private boolean hasEaten = false;
 
     public Snake(String direction, List<Point> body) {
         setDirection(direction);
@@ -33,8 +34,13 @@ public class Snake {
                 head = new Point(head.x + 1, head.y);
                 break;
         }
+
         body.add(0, head);
-        body.remove(body.size() - 1);
+        if (!hasEaten) {
+            body.remove(body.size() - 1);
+        } else {
+            hasEaten = false;
+        }
     }
 
     public void grow() {
@@ -42,12 +48,14 @@ public class Snake {
     }
 
     public boolean checkSelfCollision() {
+        Point head = body.get(0);
+        for (int i = 1; i < body.size(); i++) {
+            if (head.equals(body.get(i))) {
+                return true;
+            }
+        }
         return false;
     }
-
-    // public Point getHead() {
-
-    // }
 
     public String getDirection() {
         return direction;
@@ -63,5 +71,9 @@ public class Snake {
 
     public void setBody(List<Point> body) {
         this.body = body;
+    }
+
+    public void setHasEaten(boolean hasEaten) {
+        this.hasEaten = hasEaten;
     }
 }

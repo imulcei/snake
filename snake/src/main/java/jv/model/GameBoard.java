@@ -1,13 +1,14 @@
 package jv.model;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 
 public class GameBoard {
     private int width;
     private int height;
-    private static final int TILE_SIZE = 15;
+    private static final int TILE_SIZE = 20;
 
     public GameBoard(int width, int height) {
         setWidth(width);
@@ -19,23 +20,25 @@ public class GameBoard {
             return;
 
         // fond
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, 700, 700);
+        Color greenNokia = new Color(169, 224, 0);
+        g.setColor(greenNokia);
+        g.fillRect(0, 0, 400, 400);
 
         // dessin du serpent
-        g.setColor(Color.GREEN);
+        g.setColor(Color.DARK_GRAY);
         if (snake.getBody().isEmpty()) {
             System.out.println("Le serpent est vide !");
         }
         for (Point p : snake.getBody()) {
-            System.out.println("Dessiner le serpent à : " + p.x + ", " + p.y); // Pour debug
             g.fillRect(p.x * TILE_SIZE, p.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
         }
 
         // dessin de la pomme
-        g.setColor(Color.RED);
-        Point applePosition = apple.getPosition();
-        g.fillRect(applePosition.x * TILE_SIZE, applePosition.y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+        // Point applePosition = apple.getPosition();
+        g.setColor(Color.DARK_GRAY);
+        g.setFont(new Font("SansSerif", Font.PLAIN, 26));
+        g.drawString("✸", apple.getPosition().x * TILE_SIZE, (apple.getPosition().y + 1) * TILE_SIZE);
+
     }
 
     public int getWidth() {

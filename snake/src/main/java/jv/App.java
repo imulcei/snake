@@ -1,16 +1,16 @@
 package jv;
 
 import javax.swing.JFrame;
-import jv.model.UI;
+import jv.model.Game;
 
 public class App {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Snake");
-        UI ui = new UI();
+        Game game = new Game();
 
         // création de la fenêtre
-        frame.add(ui);
-        frame.setSize(720, 720);
+        frame.add(game);
+        frame.setSize(400, 430);
 
         // comportement à la fermeture
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
