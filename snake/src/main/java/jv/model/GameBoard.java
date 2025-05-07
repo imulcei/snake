@@ -7,18 +7,35 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 
 public class GameBoard {
     private int width;
     private int height;
     private static final int TILE_SIZE = 20;
+    private BufferedImage startImage;
 
     public GameBoard(int width, int height) {
         setWidth(width);
         setHeight(height);
+
+        // chargement de l'image du snake
+        try {
+            URL imageUrl = getClass().getClassLoader().getResource("snake.png");
+            if (imageUrl == null) {
+                throw new IllegalArgumentException("Image non trouvée !");
+            }
+            startImage = ImageIO.read(imageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    public void draw(Graphics g, Snake snake, Apple apple, int score, boolean gameOver)
+    public void draw(Graphics g, Snake snake, Apple apple, int score)
             throws FontFormatException, IOException {
         if (g == null)
             return;
@@ -50,22 +67,43 @@ public class GameBoard {
         g.setFont(retroFont12);
         g.setColor(Color.DARK_GRAY);
         g.drawString("Score : " + score, 10, 20);
+    }
 
-        // dessin du gameOver
-        if (gameOver) {
-            g.setColor(greenNokia);
-            g.fillRect(0, 0, 400, 400);
-            Font retroFont32 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
-                    .deriveFont(32f);
-            g.setColor(Color.RED);
-            g.setFont(retroFont32);
-            g.drawString("Game Over", (getWidth() / 2) - 140, getHeight() / 2);
-
-            g.setFont(retroFont12);
-            g.drawString("Appuie sur R pour recommencer", (getWidth() / 2) - 170, getHeight() / 2 + 30);
-
-            g.drawString("Score : " + score, 10, 20);
+    public void drawStartMenu(Graphics g) throws FontFormatException, IOException {
+        Color greenNokia = new Color(169, 224, 0);
+        g.setColor(greenNokia);
+        g.fillRect(0, 0, 400, 400);
+        Font retroFont32 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
+                .deriveFont(32f);
+        g.setColor(Color.DARK_GRAY);
+        g.setFont(retroFont32);
+        g.drawString("snake", (getWidth() / 2) - 80, getHeight() - 160);
+        if (startImage != null) {
+            int newWidth = 200;
+            int newHeight = 121;
+            g.drawImage(startImage, width - startImage.getWidth() / 2, 60, newWidth, newHeight, null);
         }
+        Font retroFont14 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
+                .deriveFont(14f);
+        g.setFont(retroFont14);
+        g.drawString("Appuie sur ENTREE", width / 2 - 120, height - 80);
+    }
+
+    public void drawGameOver(Graphics g, int score) throws FontFormatException, IOException {
+        Color greenNokia = new Color(169, 224, 0);
+        g.setColor(greenNokia);
+        g.fillRect(0, 0, 400, 400);
+        Font retroFont32 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
+                .deriveFont(32f);
+        g.setColor(Color.RED);
+        g.setFont(retroFont32);
+        g.drawString("Game Over", (getWidth() / 2) - 140, getHeight() / 2);
+        Font retroFont12 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
+                .deriveFont(12f);
+        g.setFont(retroFont12);
+        g.drawString("Appuie sur R pour recommencer", (getWidth() / 2) - 170, getHeight() / 2 + 30);
+
+        g.drawString("Score : " + score, 10, 20);
     }
 
     public int getWidth() {

@@ -20,8 +20,12 @@ public class Game extends JPanel implements KeyListener {
     private Apple apple;
     private Timer gameTimer;
     private int score = 0;
-    private boolean gameOver = false;
     private int currentSpeed = GAME_SPEED;
+    private GameState gameState = GameState.START_MENU;
+
+    private enum GameState {
+        START_MENU, PLAYING, GAME_OVER
+    };
 
     /**
      * Création d'une nouvelle partie
@@ -32,7 +36,6 @@ public class Game extends JPanel implements KeyListener {
         this.apple = new Apple(new Point(0, 0), gameBoard, snake);
 
         gameTimer = new Timer(currentSpeed, e -> moveSnake());
-        gameTimer.start();
 
         addKeyListener(this);
         setFocusable(true);
@@ -62,7 +65,7 @@ public class Game extends JPanel implements KeyListener {
         if (snake.checkSelfCollision()) {
             System.out.println("Tu t'es mangé toi-même !");
             gameTimer.stop();
-            gameOver = true;
+            gameState = GameState.GAME_OVER;
             repaint();
             return;
         }
@@ -83,7 +86,7 @@ public class Game extends JPanel implements KeyListener {
         if (head.x >= collisionX || head.x < 0 || head.y >= collisionY || head.y < 0) {
             System.out.println("Tu as perdu.");
             gameTimer.stop();
-            gameOver = true;
+            gameState = GameState.GAME_OVER;
             repaint();
         }
     }
@@ -94,11 +97,11 @@ public class Game extends JPanel implements KeyListener {
     public void restart() {
         this.snake = new Snake("RIGHT", new ArrayList<>());
         this.apple = new Apple(new Point(8, 10), gameBoard, snake);
-        this.gameOver = false;
         this.score = 0;
         this.currentSpeed = GAME_SPEED;
         gameTimer.setDelay(currentSpeed);
         gameTimer.restart();
+        this.gameState = GameState.PLAYING;
         repaint();
     }
 
@@ -106,7 +109,19 @@ public class Game extends JPanel implements KeyListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         try {
-            gameBoard.draw(g, snake, apple, score, gameOver);
+            switch (gameState) {
+                case START_MENU:
+                    gameBoard.drawStartMenu(g);
+                    break;
+                case PLAYING:
+                    gameBoard.draw(g, snake, apple, score);
+                    break;
+                case GAME_OVER:
+                    gameBoard.drawGameOver(g, score);
+                    break;
+                default:
+                    break;
+            }
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -129,8 +144,23 @@ public class Game extends JPanel implements KeyListener {
                 break;
         }
 
-        if (gameOver && e.getKeyCode() == KeyEvent.VK_R) {
-            restart();
+        // gestion du menu : menu, jouer, game over
+        if (gameState == GameState.START_MENU && e.getKeyCode() == KeyEvent.VK_ENTER) {
+            gameState = GameState.PLAYING;
+            gameTimer.start();
+            repaint();
+            return;
+        }
+
+        // gestion du game over et du restart avec la touche r
+        if (gameState == GameState.GAME_OVER) {
+            if (e.getKeyCode() == KeyEvent.VK_R) {
+                restart();
+                gameState = GameState.PLAYING;
+                return;
+            } else if (e.getKeyCode() == KeyEvent.VK_Q) {
+                System.exit(0);
+            }
         }
     }
 
