@@ -41,6 +41,9 @@ Contrôlez le serpent, mangez les pommes et évitez de vous mordre !
 │       ├── App.java
 │       └── model/
 │           └── Game.java
+│           └── Gameboard.java
+│           └── Apple.java
+│           └── Snake.java
 ├── resources/
 │   ├── PressStart2P-Regular.ttf
 │   └── snake.png
