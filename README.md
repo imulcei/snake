@@ -34,6 +34,7 @@ Contrôlez le serpent, mangez les pommes et évitez de vous mordre !
 
 ## Structure du projet
 
+```text
 .
 ├── src/
 │   └── jv/
@@ -46,6 +47,7 @@ Contrôlez le serpent, mangez les pommes et évitez de vous mordre !
 ├── target/
 │   └── snake.jar
 └── README.md
+```
 
 ## 📜 Licence
 
