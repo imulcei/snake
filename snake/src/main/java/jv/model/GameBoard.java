@@ -5,8 +5,8 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -52,7 +52,8 @@ public class GameBoard {
      */
     private void loadFonts() {
         try {
-            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"));
+            InputStream fontStream = getClass().getClassLoader().getResourceAsStream("PressStart2P-Regular.ttf");
+            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
             retroFont12 = baseFont.deriveFont(12f);
             retroFont14 = baseFont.deriveFont(14f);
             retroFont32 = baseFont.deriveFont(32f);
@@ -100,8 +101,6 @@ public class GameBoard {
         g.drawString("✸", apple.getPosition().x * TILE_SIZE, (apple.getPosition().y + 1) * TILE_SIZE);
 
         // dessin du score
-        Font retroFont12 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
-                .deriveFont(12f);
         g.setFont(retroFont12);
         g.setColor(Color.DARK_GRAY);
         g.drawString("Score : " + score, 10, 20);
