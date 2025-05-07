@@ -18,6 +18,17 @@ public class GameBoard {
     private static final int TILE_SIZE = 20;
     private BufferedImage startImage;
 
+    private Font retroFont12;
+    private Font retroFont14;
+    private Font retroFont32;
+    private static final Color GREEN_NOKIA = new Color(169, 224, 0);
+
+    /**
+     * Chargement du plateau de jeu
+     * 
+     * @param width  Largeur du plateau
+     * @param height Hauteur du plateau
+     */
     public GameBoard(int width, int height) {
         setWidth(width);
         setHeight(height);
@@ -33,16 +44,43 @@ public class GameBoard {
             e.printStackTrace();
         }
 
+        loadFonts();
     }
 
+    /**
+     * Centralize le chargement et le stockage des fonts dans des variables
+     */
+    private void loadFonts() {
+        try {
+            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"));
+            retroFont12 = baseFont.deriveFont(12f);
+            retroFont14 = baseFont.deriveFont(14f);
+            retroFont32 = baseFont.deriveFont(32f);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+            retroFont12 = new Font("SansSerif", Font.PLAIN, 12); // fallback
+            retroFont14 = new Font("SansSerif", Font.PLAIN, 14);
+            retroFont32 = new Font("SansSerif", Font.PLAIN, 32);
+        }
+    }
+
+    /**
+     * Permet de dessiner les différents éléments
+     * 
+     * @param g
+     * @param snake Le serpent
+     * @param apple La pomme
+     * @param score Le score
+     * @throws FontFormatException Gère les exceptions des polices
+     * @throws IOException         Gère les exceptions des images
+     */
     public void draw(Graphics g, Snake snake, Apple apple, int score)
             throws FontFormatException, IOException {
         if (g == null)
             return;
 
         // fond
-        Color greenNokia = new Color(169, 224, 0);
-        g.setColor(greenNokia);
+        g.setColor(GREEN_NOKIA);
         g.fillRect(0, 0, 400, 400);
 
         // dessin du serpent
@@ -70,36 +108,31 @@ public class GameBoard {
     }
 
     public void drawStartMenu(Graphics g) throws FontFormatException, IOException {
-        Color greenNokia = new Color(169, 224, 0);
-        g.setColor(greenNokia);
+        g.setColor(GREEN_NOKIA);
         g.fillRect(0, 0, 400, 400);
-        Font retroFont32 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
-                .deriveFont(32f);
-        g.setColor(Color.DARK_GRAY);
+
         g.setFont(retroFont32);
-        g.drawString("snake", (getWidth() / 2) - 80, getHeight() - 160);
+        g.setColor(Color.DARK_GRAY);
+        g.drawString("snake", (width / 2) - 80, height - 160);
+
         if (startImage != null) {
             int newWidth = 200;
             int newHeight = 121;
             g.drawImage(startImage, width - startImage.getWidth() / 2, 60, newWidth, newHeight, null);
         }
-        Font retroFont14 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
-                .deriveFont(14f);
+
         g.setFont(retroFont14);
         g.drawString("Appuie sur ENTREE", width / 2 - 120, height - 80);
     }
 
     public void drawGameOver(Graphics g, int score) throws FontFormatException, IOException {
-        Color greenNokia = new Color(169, 224, 0);
-        g.setColor(greenNokia);
+        g.setColor(GREEN_NOKIA);
         g.fillRect(0, 0, 400, 400);
-        Font retroFont32 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
-                .deriveFont(32f);
+
         g.setColor(Color.RED);
         g.setFont(retroFont32);
         g.drawString("Game Over", (getWidth() / 2) - 140, getHeight() / 2);
-        Font retroFont12 = Font.createFont(Font.TRUETYPE_FONT, new File("snake/resources/PressStart2P-Regular.ttf"))
-                .deriveFont(12f);
+
         g.setFont(retroFont12);
         g.drawString("Appuie sur R pour recommencer", (getWidth() / 2) - 170, getHeight() / 2 + 30);
 
